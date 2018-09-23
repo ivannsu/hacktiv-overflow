@@ -20,11 +20,11 @@ module.exports = {
           _id: user._id,
           name: user.name,
           email: user.email
-        }, process.env.JWT_SECRET_KEY, function(err, token) {
+        }, process.env.JWT_SECRET_KEY, function (err, token) {
           if(err) {
             res.status(500).json({
               message: err
-            })  
+            })
           } else {
             res.status(200).json({
               message: 'sign in successfully',
@@ -35,7 +35,9 @@ module.exports = {
       }
     })
     .catch(err => {
-
+      res.status(500).json({
+        message: err.message
+      })
     })
   },
   signup (req, res) {
