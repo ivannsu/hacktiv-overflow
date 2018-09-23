@@ -17,6 +17,7 @@ if(process.env.NODE_ENV === 'dev') {
 } else {
   mongoose.connect('mongodb://hacktiv-overflow:hacktiv-overflow123@ds111963.mlab.com:11963/hacktiv-overflow', { useNewUrlParser: true })
 }
+const db = mongoose.connection
 
 db.on('error', console.error.bind(console, 'Connection error:'));
 db.once('open', () => console.log('[Configuration] : Connected to mongooese'));
