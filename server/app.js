@@ -8,6 +8,7 @@ const mongoose = require('mongoose')
 const PORT = process.env.PORT || 3000
 const app = express()
 
+const answerRouters = require('./routers/answer')
 const userRouters = require('./routers/user')
 const questionRouters = require('./routers/question')
 
@@ -17,6 +18,7 @@ app.use(express.json())
 
 app.use('/users', userRouters)
 app.use('/questions', questionRouters)
+app.use('/answers', answerRouters)
 
 if(process.env.NODE_ENV === 'dev') {
   mongoose.connect('mongodb://localhost:27017/hacktiv-overflow', { useNewUrlParser: true })
