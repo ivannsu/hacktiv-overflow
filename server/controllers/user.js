@@ -36,6 +36,7 @@ module.exports = {
   
                 res.status(200).json({
                   message: 'Success generate token',
+                  userId: user._id,
                   token: token
                 })
               }
