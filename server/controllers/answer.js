@@ -10,21 +10,35 @@ module.exports = {
       user: userId
     }
 
-    Answer.create(input)
-    .then(newAnswer => {
-
-      Question.updateOne({ _id: questionId }, { $push: { answers: newAnswer._id } })
-      .then(affected => {
-        res.status(201).json({
-          message: 'create new answer successfully',
-          answer: newAnswer
-        })
-      })
-      .catch(err => {
+    Question.findOne({ _id: questionId })
+    .then(question => {
+      if (!question) {
         res.status(500).json({
-          message: err.message
+          message: 'no question !'
         })  
-      })
+      } else {
+        Answer.create(input)
+        .then(newAnswer => {
+
+          Question.updateOne({ _id: questionId }, { $push: { answers: newAnswer._id } })
+          .then(affected => {
+            res.status(201).json({
+              message: 'create new answer successfully',
+              answer: newAnswer
+            })
+          })
+          .catch(err => {
+            res.status(500).json({
+              message: err.message
+            })
+          })
+        })
+        .catch(err => {
+          res.status(500).json({
+            message: err.message
+          })
+        })
+      }
     })
     .catch(err => {
       res.status(500).json({
