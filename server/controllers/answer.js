@@ -48,10 +48,38 @@ module.exports = {
   },
 
   update (req, res) {
+    let answerId = req.params.id
+    let userId = req.decoded._id
+    let input = {
+      answer: req.body.answer
+    }
 
-  },
+    Answer.findOne({ _id: answerId, user: userId })
+    .then(answer => {
+      if (!answer) {
+        res.status(500).json({
+          message: 'no answer created by this user'
+        })
+      } else {
 
-  findByQuestion (req, res) {
-
+        Answer.updateOne({ _id: answerId }, input)
+        .then(affected => {
+          res.status(200).json({
+            message: 'update answer successfully',
+            id: answer._id
+          })
+        })
+        .catch(err => {
+          res.status(500).json({
+            message: err.message
+          })
+        })
+      }
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: err.message
+      })
+    })
   }
 }
