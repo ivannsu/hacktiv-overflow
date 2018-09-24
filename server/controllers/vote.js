@@ -6,6 +6,7 @@ module.exports = {
     let userId = req.decoded._id
     let input = {
       question: questionId,
+      answer: null,
       user: userId,
       status: 1
     }
@@ -29,6 +30,7 @@ module.exports = {
     let userId = req.decoded._id
     let input = {
       question: questionId,
+      answer: null,
       user: userId,
       status: -1
     }
@@ -52,6 +54,7 @@ module.exports = {
     let userId = req.decoded._id
     let input = {
       answer: answerId,
+      question: null,
       user: userId,
       status: 1
     }
@@ -75,6 +78,7 @@ module.exports = {
     let userId = req.decoded._id
     let input = {
       answer: answerId,
+      question: null,
       user: userId,
       status: -1
     }
@@ -92,4 +96,34 @@ module.exports = {
       })
     })
   },
+
+  countQuestionVotes (req, res) {
+    Vote.find({}).select('question').$where('this.question !== null').count()
+    .then(count => {
+      res.status(200).json({
+        message: 'count question votes',
+        count: count
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: err.message
+      })
+    })
+  },
+
+  countAnswerVotes (req, res) {
+    Vote.find({}).select('answer').$where('this.answer !== null').count()
+    .then(count => {
+      res.status(200).json({
+        message: 'count answer votes',
+        count: count
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: err.message
+      })
+    })
+  }
 }
