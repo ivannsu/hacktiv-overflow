@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: '',
-    userId: ''
+    userId: '',
+    questions: []
   },
   mutations: {
     setToken (state, payload) {
@@ -20,9 +21,15 @@ export default new Vuex.Store({
     },
     removeUserId (state) {
       state.userId = ''
+    },
+    setQuestions (state, payload) {
+      state.questions = payload
     }
   },
   actions: {
+    getQuestions ({ commit }, payload) {
+      commit('setQuestions', payload)
+    },
     commitToken ({ commit }, payload) {
       commit('setToken', payload)
     },

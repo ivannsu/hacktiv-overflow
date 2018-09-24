@@ -22,10 +22,19 @@ import axios from 'axios'
 export default {
   name: 'home',
   created () {
+    let self = this
+
     axios({
       method: 'GET',
-      
+      url: `${this.$baseurl}/questions/title`
     })
+      .then(response => {
+        let questions = response.data.questions
+        self.$store.dispatch('getQuestions', questions)
+      })
+      .catch(err => {
+        console.error(err.response.data.message)
+      })
   }
 }
 </script>
