@@ -89,7 +89,16 @@ module.exports = {
   },
 
   findAll (req, res) {
-    Question.find({}).populate('user', '_id name email')
+    Question.find({})
+    .populate('user', '_id name email')
+    .populate({
+      path: 'answers',
+      populate: {
+        path: 'user',
+        model: 'User',
+        select: '_id name email'
+      }
+    })
     .then(questions => {
       res.status(200).json({
         message: 'get all questions successfully',
