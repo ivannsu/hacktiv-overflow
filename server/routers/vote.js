@@ -1,10 +1,13 @@
 const router = require('express').Router()
-const { questionUpVote, questionDownVote, answerUpVote, answerDownVote } = require('../controllers/vote')
+const { 
+  questionVote, answerVote,
+  countQuestionVotes, countAnswerVotes
+} = require('../controllers/vote')
 const isLogin = require('../middlewares/isLogin')
 
-router.post('/question/:id/upvote', isLogin, questionUpVote)
-router.post('/question/:id/downvote', isLogin, questionDownVote)
-router.post('/answer/:id/upvote', isLogin, answerUpVote)
-router.post('/answer/:id/downvote', isLogin, answerDownVote)
+router.get('/question/:id/count', countQuestionVotes)
+router.get('/answer/:id/count', countAnswerVotes)
+router.post('/question/:id/:type', isLogin, questionVote)
+router.post('/answer/:id/:type', isLogin, answerVote)
 
 module.exports = router
