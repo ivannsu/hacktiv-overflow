@@ -1,8 +1,82 @@
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 const crypt = require('../helpers/crypt')
+const axios = require('axios')
 
 module.exports = {
+  fbSignin (req, res) {
+    let fbtoken = req.headers.fbtoken
+
+    axios({
+      method: 'get',
+      url: `https://graph.facebook.com/me?fields=id,name,email&access_token=${fbtoken}`
+    })
+    .then(response => {
+      // DATA FACEBOOK 
+      let fbName = response.data.name
+      let fbEmail = response.data.email
+      let input = {
+        name: fbName, email: fbEmail, 
+        password: crypt('1234566'), loginType: 'facebook'
+      }
+
+      User.findOne({email: fbEmail})
+      .then(user => {
+
+        if(!user) {
+          User.create(input)
+          .then(user => {
+            jwt.sign({ email: user.email }, process.env.JWT_SECRET_KEY, function(err, token) {
+              if(err) {
+                res.status(500).json({
+                  message: 'Error generate token',
+                  error: err
+                })
+              } else {
+  
+                res.status(200).json({
+                  message: 'Success generate token',
+                  token: token
+                })
+              }
+            });
+          })
+          .catch(err => {
+            res.status(500).json({
+              message: 'Error create new user',
+              error: err
+            })
+          })
+        } else {
+          jwt.sign({ email: user.email }, process.env.JWT_SECRET_KEY, function(err, token) {
+            if(err) {
+              res.status(500).json({
+                message: 'Error generate token',
+                error: err
+              })
+            } else {
+
+              res.status(200).json({
+                message: 'Success generate token',
+                token: token
+              })
+            }
+          })
+        }
+      })
+      .catch(err => {
+        res.status(500).json({
+          message: err.message
+        })
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: err.message
+      })
+    })
+  },
+
   signin (req, res) {
     let input = {
       email: req.body.email,
