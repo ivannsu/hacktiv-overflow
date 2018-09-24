@@ -15,6 +15,8 @@ const voteSchema = new Schema({
     ref: 'User'
   },
   status: Number
+}, {
+  timestamps: true
 })
 
 const Vote = mongoose.model('Vote', voteSchema)

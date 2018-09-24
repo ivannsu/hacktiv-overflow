@@ -9,6 +9,8 @@ const answerSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User'
   }
+}, {
+  timestamps: true
 })
 
 const Answer = mongoose.model('Answer', answerSchema)
