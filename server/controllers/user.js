@@ -25,8 +25,8 @@ module.exports = {
 
         if(!user) {
           User.create(input)
-          .then(user => {
-            jwt.sign({ email: user.email }, process.env.JWT_SECRET_KEY, function(err, token) {
+          .then(newUser => {
+            jwt.sign({ email: newUser.email }, process.env.JWT_SECRET_KEY, function(err, token) {
               if(err) {
                 res.status(500).json({
                   message: 'Error generate token',
@@ -36,7 +36,7 @@ module.exports = {
   
                 res.status(200).json({
                   message: 'Success generate token',
-                  userId: user._id,
+                  userId: newUser._id,
                   token: token
                 })
               }
@@ -59,6 +59,7 @@ module.exports = {
 
               res.status(200).json({
                 message: 'Success generate token',
+                userId: user._id,
                 token: token
               })
             }
