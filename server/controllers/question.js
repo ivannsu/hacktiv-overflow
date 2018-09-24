@@ -110,5 +110,46 @@ module.exports = {
         message: err.message
       })
     })
+  },
+
+  findById (req, res) {
+    let id = req.params.id
+
+    Question.findOne({ _id: id })
+    .populate('user', '_id name email')
+    .populate({
+      path: 'answers',
+      populate: {
+        path: 'user',
+        model: 'User',
+        select: '_id name email'
+      }
+    })
+    .then(questions => {
+      res.status(200).json({
+        message: 'get question by id successfully',
+        questions
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: err.message
+      })
+    })
+  },
+
+  selectTitle (req, res) {
+    Question.find({}).select('title')
+    .then(questions => {
+      res.status(200).json({
+        message: 'get all questions title successfully',
+        questions
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: err.message
+      })
+    })
   }
 }
