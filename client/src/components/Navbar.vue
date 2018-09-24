@@ -133,7 +133,16 @@ export default {
           }
         })
           .then(response => {
-            console.log(response.data)
+            let data = response.data
+
+            localStorage.setItem('token', data.token)
+            localStorage.setItem('userId', data.userId)
+
+            self.$store.dispatch('commitToken', data.token)
+            self.$store.dispatch('commitUserId', data.userId)
+
+            // eslint-disable-next-line
+            $('#signinModal').modal('hide')
           })
           .catch(err => {
             self.message = err.response.data.message
