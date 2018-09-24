@@ -3,11 +3,11 @@ const Schema = mongoose.Schema
 
 const answerSchema = new Schema({
   answer: {
-    type: String,
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    }
+    type: String
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   }
 })
 
