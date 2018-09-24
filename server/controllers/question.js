@@ -57,10 +57,49 @@ module.exports = {
   },
 
   remove (req, res) {
-    
+    let questionId = req.params.id
+    let userId = req.decoded._id
+
+    Question.findOne({ _id: questionId, user: userId })
+    .then(question => {
+      if (!question) {
+        res.status(500).json({
+          message: 'no question create by this user'
+        })
+      } else {
+        Question.deleteOne({ _id: questionId })
+        .then(affected => {
+          res.status(200).json({
+            message: 'delete question successfully',
+            question
+          })
+        })
+        .catch(err => {
+          res.status(500).json({
+            message: err.message
+          })
+        })
+      }
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: err.message
+      })
+    })
   },
 
   findAll (req, res) {
-
+    Question.find({}).populate('user', '_id name email')
+    .then(questions => {
+      res.status(200).json({
+        message: 'get all questions successfully',
+        questions
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: err.message
+      })
+    })
   }
 }
