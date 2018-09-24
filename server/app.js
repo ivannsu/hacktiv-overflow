@@ -11,6 +11,7 @@ const app = express()
 const answerRouters = require('./routers/answer')
 const userRouters = require('./routers/user')
 const questionRouters = require('./routers/question')
+const voteRouters = require('./routers/vote')
 
 app.use(cors())
 app.use(express.urlencoded({ extended: false }))
@@ -19,6 +20,7 @@ app.use(express.json())
 app.use('/users', userRouters)
 app.use('/questions', questionRouters)
 app.use('/answers', answerRouters)
+app.use('/votes', voteRouters)
 
 if(process.env.NODE_ENV === 'dev') {
   mongoose.connect('mongodb://localhost:27017/hacktiv-overflow', { useNewUrlParser: true })
