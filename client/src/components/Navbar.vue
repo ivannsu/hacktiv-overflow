@@ -32,10 +32,26 @@
             </button>
           </div>
           <div class="modal-body">
-            <p>Modal body text goes here.</p>
+            <div class="form-group text-center">
+              <fb-signin-button
+                :params="fbSignInParams"
+                @success="onSignInSuccess"
+                @error="onSignInError">
+                Facebook
+              </fb-signin-button>
+            </div>
+            <p class="text-center"><small>OR</small></p>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" class="form-control" placeholder="Enter your email..." v-model="email">
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" class="form-control" placeholder="Enter your password..." v-model="password">
+            </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Sign In</button>
+            <button type="button" class="btn btn-primary" @click="signin">Sign In</button>
             <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -53,10 +69,21 @@
             </button>
           </div>
           <div class="modal-body">
-            <p>Modal body text goes here.</p>
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" class="form-control" placeholder="Enter your name..." v-model="name">
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" class="form-control" placeholder="Enter your email..." v-model="email">
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" class="form-control" placeholder="Enter your password..." v-model="password">
+            </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Sign Up</button>
+            <button type="button" class="btn btn-primary" @click="signup">Sign Up</button>
             <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -67,10 +94,44 @@
 
 <script>
 export default {
-  name: 'Navbar'
+  name: 'Navbar',
+  data () {
+    return {
+      fbSignInParams: {
+        scope: 'public_profile,email',
+        return_scopes: true
+      },
+      name: '',
+      email: '',
+      password: ''
+    }
+  },
+  methods: {
+    onSignInSuccess (response) {
+      console.log(response)
+    },
+    onSignInError (error) {
+      console.log(error)
+    },
+    signin () {
+      console.log(this.name, this.email, this.password)
+    },
+    signup () {
+      console.log(this.name, this.email, this.password)
+    }
+  }
 }
 </script>
 
 <style>
+
+.fb-signin-button {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 3px;
+  background-color: #4267b2;
+  color: #fff;
+  cursor: pointer;
+}
 
 </style>
