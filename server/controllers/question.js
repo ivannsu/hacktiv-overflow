@@ -39,7 +39,7 @@ module.exports = {
         .then(affected => {
           res.status(200).json({
             message: 'update question successfully',
-            question: question
+            question: question._id
           })
         })
         .catch(err => {
@@ -71,7 +71,7 @@ module.exports = {
         .then(affected => {
           res.status(200).json({
             message: 'delete question successfully',
-            question
+            question: question._id
           })
         })
         .catch(err => {
