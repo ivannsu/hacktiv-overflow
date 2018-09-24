@@ -14,11 +14,14 @@
           <a class="nav-link" href="#">Questions</a>
         </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0">
+      <div class="form-inline my-2 my-lg-0" v-if="!token && !userId && !authentication">
         <button type="button" class="btn btn-link" data-toggle="modal" data-target="#signinModal">Sign In</button>
         &nbsp;
         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#signupModal">Sign Up</button>
-      </form>
+      </div>
+      <div class="form-inline my-2 my-lg-0" v-else>
+        <button type="button" class="btn btn-link text-danger" @click="signout">Sign Out</button>
+      </div>
     </div>
 
     <!-- SIGN IN MODAL -->
@@ -32,6 +35,9 @@
             </button>
           </div>
           <div class="modal-body">
+            <div class="alert alert-danger" v-if="message !== ''">
+              {{ message }}
+            </div>
             <div class="form-group text-center">
               <fb-signin-button
                 :params="fbSignInParams"
@@ -69,6 +75,9 @@
             </button>
           </div>
           <div class="modal-body">
+            <div class="alert alert-danger" v-if="message !== ''">
+              {{ message }}
+            </div>
             <div class="form-group">
               <label>Name</label>
               <input type="text" class="form-control" placeholder="Enter your name..." v-model="name">
@@ -93,6 +102,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Navbar',
   data () {
@@ -103,21 +114,115 @@ export default {
       },
       name: '',
       email: '',
-      password: ''
+      password: '',
+      message: '',
+      authentication: false
     }
   },
   methods: {
     onSignInSuccess (response) {
-      console.log(response)
+      let self = this
+      let fbtoken = response.authResponse.accessToken
+
+      if (response.status === 'connected') {
+        axios({
+          method: 'POST',
+          url: `${this.$baseurl}/users/fbSignin`,
+          headers: {
+            fbtoken: fbtoken
+          }
+        })
+          .then(response => {
+            console.log(response.data)
+          })
+          .catch(err => {
+            self.message = err.response.data.message
+          })
+      }
     },
     onSignInError (error) {
       console.log(error)
     },
     signin () {
-      console.log(this.name, this.email, this.password)
+      let self = this
+
+      axios({
+        method: 'POST',
+        url: `${this.$baseurl}/users/signin`,
+        data: {
+          email: this.email,
+          password: this.password
+        }
+      })
+        .then(response => {
+          let data = response.data
+
+          localStorage.setItem('token', data.token)
+          localStorage.setItem('userId', data.userId)
+
+          self.$store.dispatch('commitToken', data.token)
+          self.$store.dispatch('commitUserId', data.userId)
+
+          self.name = ''
+          self.email = ''
+          self.password = ''
+
+          // eslint-disable-next-line
+          $('#signinModal').modal('hide');
+        })
+        .catch(err => {
+          self.message = err.response.data.message
+        })
     },
     signup () {
-      console.log(this.name, this.email, this.password)
+      let self = this
+
+      axios({
+        method: 'POST',
+        url: `${this.$baseurl}/users/signup`,
+        data: {
+          name: this.name,
+          email: this.email,
+          password: this.password
+        }
+      })
+        .then(response => {
+          self.name = ''
+          self.email = ''
+          self.password = ''
+
+          // eslint-disable-next-line
+          $('#signupModal').modal('hide');
+        })
+        .catch(err => {
+          self.message = err.response.data.message
+        })
+    },
+    signout () {
+      localStorage.removeItem('token')
+      localStorage.removeItem('userId')
+
+      this.$store.dispatch('removeToken')
+      this.$store.dispatch('removeUserId')
+
+      this.authentication = false
+    }
+  },
+  created () {
+    let token = localStorage.getItem('token')
+
+    if (!token) {
+      this.authentication = false
+    } else {
+      this.authentication = true
+    }
+  },
+  computed: {
+    token () {
+      return this.$store.state.token
+    },
+    userId () {
+      return this.$store.state.userId
     }
   }
 }
