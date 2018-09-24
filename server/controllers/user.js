@@ -28,6 +28,7 @@ module.exports = {
           } else {
             res.status(200).json({
               message: 'sign in successfully',
+              userId: user._id,
               token: token
             })
           }
