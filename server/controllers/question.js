@@ -140,6 +140,7 @@ module.exports = {
 
   selectTitle (req, res) {
     Question.find({}).select('title')
+    .populate('user', '_id name email')
     .then(questions => {
       res.status(200).json({
         message: 'get all questions title successfully',
