@@ -102,11 +102,16 @@ module.exports = {
   countQuestionVotes (req, res) {
     let questionId = req.params.id
 
-    Vote.find({ question: questionId }).select('question').$where('this.question !== null').count()
-    .then(count => {
+    Vote.find({ question: questionId }).select('question status').$where('this.question !== null')
+    .then(votes => {
+
+      let total = votes.reduce((acc, obj) => {
+        return acc += obj.status
+      }, 0)
+
       res.status(200).json({
         message: 'count question votes',
-        count: count
+        total
       })
     })
     .catch(err => {
@@ -119,11 +124,16 @@ module.exports = {
   countAnswerVotes (req, res) {
     let answerId = req.params.id
 
-    Vote.find({ answer: answerId }).select('answer').$where('this.answer !== null').count()
-    .then(count => {
+    Vote.find({ answer: answerId }).$where('this.answer !== null').select('answer status')
+    .then(votes => {
+      
+      let total = votes.reduce((acc, obj) => {
+        return acc += obj.status
+      }, 0)
+
       res.status(200).json({
         message: 'count answer votes',
-        count: count
+        total
       })
     })
     .catch(err => {
