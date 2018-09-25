@@ -24,6 +24,10 @@ export default {
 
 <style>
 
+.card {
+  margin-bottom: 10px;
+}
+
 .lds-ring-container {
   width: 100%;
   height: 100%;
