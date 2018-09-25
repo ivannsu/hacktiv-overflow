@@ -1,18 +1,18 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">
+    <router-link class="navbar-brand" :to="{ name: 'all-question' }">
       <img src="public/hacktiv8.png" width="30" height="30" class="d-inline-block align-top" alt="">
       Hacktiv Overflow
-      </a>
+    </router-link>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="#">Questions</a>
-        </li>
+        </li> -->
       </ul>
       <div class="form-inline my-2 my-lg-0" v-if="!token && !userId && !authentication">
         <button type="button" class="btn btn-link" data-toggle="modal" data-target="#signinModal">Sign In</button>
@@ -219,10 +219,13 @@ export default {
   },
   created () {
     let token = localStorage.getItem('token')
+    let userId = localStorage.getItem('userId')
 
-    if (!token) {
+    if (!token && !userId) {
       this.authentication = false
     } else {
+      this.$store.dispatch('commitToken', token)
+      this.$store.dispatch('commitUserId', userId)
       this.authentication = true
     }
   },
