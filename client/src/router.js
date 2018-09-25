@@ -18,6 +18,16 @@ export default new Router({
           component: () => import('./components/AllQuestion.vue')
         },
         {
+          path: 'users',
+          name: 'all-user',
+          component: () => import('./components/AllUser.vue')
+        },
+        {
+          path: 'signin',
+          name: 'signin',
+          component: () => import('./components/Signin.vue')
+        },
+        {
           path: 'create',
           name: 'create-question',
           component: () => import('./components/CreateQuestion.vue')
