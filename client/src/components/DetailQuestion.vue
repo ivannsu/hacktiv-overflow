@@ -13,14 +13,30 @@
         <button v-if="token && userId === question.user._id" type="button" class="float-right btn btn-link text-danger" @click="remove">Delete</button>
         <router-link v-if="token && userId === question.user._id" :to="{ name: 'edit-question' }" class="float-right btn btn-link text-info">Edit</router-link>
       </p>
-      <hr>
+      <p>
+        <h5 style="display: inline-block"><span class="badge badge-warning">{{ questionVotes }} Votes</span></h5>
+        &nbsp;
+        <a class="btn btn-outline-primary" href="javascript:void(0)" @click="questionVote('up')"><span class="fa fa-thumbs-up"></span> UP VOTE</a>
+        &nbsp;
+        <a class="btn btn-outline-primary" href="javascript:void(0)" @click="questionVote('down')"><span class="fa fa-thumbs-down"></span> DOWN VOTE</a>
+      </p>
+      <hr />
       <h4>{{ question.answers.length }} Answer</h4>
       <br>
       <div class="card border-dark" v-for="(answer, key) in question.answers" :key="key">
         <div class="card-header">
-          By: <strong>{{ answer.user.name }}</strong>
-          <span class="float-right btn">29 Sep 2018</span>
-          <button v-if="token && userId === answer.user._id" class="float-right btn btn-outline-info" @click="openEditModal(answer)">Edit</button>
+          <div>
+            By: <strong>{{ answer.user.name }}</strong>
+            <span class="float-right btn">29 Sep 2018</span>
+            <button v-if="token && userId === answer.user._id" class="float-right btn btn-outline-info" @click="openEditModal(answer)">Edit</button>
+          </div>
+          <div>
+            <h5 style="display: inline-block"><span class="badge badge-warning"> Votes</span></h5>
+            &nbsp;
+            <a class="btn btn-sm btn-outline-secondary" href="javascript:void(0)" @click="answerVote(answer._id, 'up')"><span class="fa fa-thumbs-up"></span> UP VOTE</a>
+            &nbsp;
+            <a class="btn btn-sm btn-outline-secondary" href="javascript:void(0)" @click="answerVote(answer._id, 'down')"><span class="fa fa-thumbs-down"></span> DOWN VOTE</a>
+          </div>
         </div>
         <div class="card-body">
           <p class="card-text">{{ answer.answer }}</p>
@@ -72,12 +88,60 @@ export default {
   data () {
     return {
       question: null,
+
+      questionVotes: 0,
+      answerVotes: 0,
+
       answer: '',
       editAnswerId: '',
       editAnswerText: ''
     }
   },
   methods: {
+    questionVote (type) {
+      let self = this
+
+      axios({
+        method: 'POST',
+        url: `${self.$baseurl}/votes/question/${self.id}/${type}`,
+        headers: {
+          token: self.token
+        }
+      })
+        .then(res5ba9ebd788c4db0365c4fda2ponse => {
+          self.countQuestionVotes()
+        })
+        .catch(err => {
+          let message = err.response.data.message
+          if (!message) {
+            console.error(err)
+          } else {
+            console.error(message)
+          }
+        })
+    },
+    answerVote (id, type) {
+      let self = this
+
+      axios({
+        method: 'POST',
+        url: `${self.$baseurl}/votes/answer/${id}/${type}`,
+        headers: {
+          token: self.token
+        }
+      })
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(err => {
+          let message = err.response.data.message
+          if (!message) {
+            console.error(err)
+          } else {
+            console.error(message)
+          }
+        })
+    },
     openEditModal (answer) {
       this.editAnswerId = answer._id
       this.editAnswerText = answer.answer
@@ -196,10 +260,52 @@ export default {
             console.error(message)
           }
         })
+    },
+    countQuestionVotes () {
+      let self = this
+
+      axios({
+        method: 'GET',
+        url: `${self.$baseurl}/votes/question/${self.id}/count`
+      })
+        .then(response => {
+          let total = response.data.total
+          self.questionVotes = total
+        })
+        .catch(err => {
+          let message = err.response.data.message
+          if (!message) {
+            console.error(err)
+          } else {
+            console.error(message)
+          }
+        })
+    },
+
+    countAnswerVotes (id) {
+      let self = this
+
+      axios({
+        method: 'GET',
+        url: `${self.$baseurl}/votes/answer/${id}/count`
+      })
+        .then(response => {
+          let total = response.data.total
+          self.answerVotes = total
+        })
+        .catch(err => {
+          let message = err.response.data.message
+          if (!message) {
+            console.error(err)
+          } else {
+            console.error(message)
+          }
+        })
     }
   },
   created () {
     this.fetchDetailQuestion()
+    this.countQuestionVotes()
   },
   computed: {
     token () {
