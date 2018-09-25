@@ -48,6 +48,20 @@ export default {
           }
         })
     }
+  },
+  created () {
+    if (!this.token && !this.userId) {
+      this.$router.push({ name: 'signin' })
+    }
+  },
+  computed: {
+    token () {
+      return this.$store.state.token
+    },
+
+    userId () {
+      return this.$store.state.userId
+    }
   }
 }
 </script>
