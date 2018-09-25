@@ -20,7 +20,7 @@
         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#signupModal">Sign Up</button>
       </div>
       <div class="form-inline my-2 my-lg-0" v-else>
-        <button type="button" class="btn btn-danger" @click="signout">Sign Out</button>
+        <button type="button" class="btn btn-danger" @click="signout">Sign Out <span class="fa fa-sign-out-alt"></span></button>
       </div>
     </div>
 
