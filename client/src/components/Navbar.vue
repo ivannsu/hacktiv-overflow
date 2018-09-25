@@ -215,6 +215,7 @@ export default {
       this.$store.dispatch('removeUserId')
 
       this.authentication = false
+      this.$router.push({ name: 'all-question' })
     }
   },
   created () {
