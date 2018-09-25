@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
 
 Vue.use(Router)
 
@@ -10,8 +9,32 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
+      component: () => import('./views/Home.vue'),
+      children: [
+        {
+          path: '/',
+          name: 'all-question',
+          props: true,
+          component: () => import('./components/AllQuestion.vue')
+        },
+        {
+          path: 'create',
+          name: 'create-question',
+          component: () => import('./components/CreateQuestion.vue')
+        },
+        {
+          path: 'question/:id',
+          name: 'detail-question',
+          props: true,
+          component: () => import('./components/DetailQuestion.vue')
+        },
+        {
+          path: 'edit/:id',
+          name: 'edit-question',
+          props: true,
+          component: () => import('./components/EditQuestion.vue')
+        }
+      ]
     },
     {
       path: '/about',
