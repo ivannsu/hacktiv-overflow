@@ -39,7 +39,7 @@ export default {
       .then(response => {
         let users = response.data.users
 
-        if(users.length === 0) {
+        if (users.length === 0) {
           self.users.data = []
           self.users.empty = true
         } else {
