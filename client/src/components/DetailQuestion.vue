@@ -17,7 +17,11 @@
       <h4>{{ question.answers.length }} Answer</h4>
       <br>
       <div class="card border-dark" v-for="(answer, key) in question.answers" :key="key">
-        <div class="card-header">By: <strong>{{ answer.user.name }}</strong> <span class="float-right">29 Sep 2018</span> </div>
+        <div class="card-header">
+          By: <strong>{{ answer.user.name }}</strong>
+          <span class="float-right btn">29 Sep 2018</span>
+          <button v-if="token && userId === answer.user._id" class="float-right btn btn-outline-info" @click="openEditModal(answer)">Edit</button>
+        </div>
         <div class="card-body">
           <p class="card-text">{{ answer.answer }}</p>
         </div>
@@ -34,6 +38,28 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="editAnswerModal" tabindex="-1" role="dialog" aria-labelledby="editAnswerModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Your Answer</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <textarea rows="3" class="form-control" v-model="editAnswerText"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" @click="editAnswer">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -46,10 +72,49 @@ export default {
   data () {
     return {
       question: null,
-      answer: ''
+      answer: '',
+      editAnswerId: '',
+      editAnswerText: ''
     }
   },
   methods: {
+    openEditModal (answer) {
+      this.editAnswerId = answer._id
+      this.editAnswerText = answer.answer
+
+      // eslint-disable-next-line
+      $('#editAnswerModal').modal('show')
+    },
+    editAnswer () {
+      let self = this
+
+      axios({
+        method: 'PUT',
+        url: `${self.$baseurl}/answers/update/${self.editAnswerId}`,
+        headers: {
+          token: self.$store.state.token
+        },
+        data: {
+          answer: self.editAnswerText
+        }
+      })
+        .then(response => {
+          self.editAnswerId = ''
+          self.editAnswerText = ''
+          self.fetchDetailQuestion()
+
+          // eslint-disable-next-line
+          $('#editAnswerModal').modal('hide')
+        })
+        .catch(err => {
+          let message = err.response.data.message
+          if (!message) {
+            console.error(err)
+          } else {
+            console.error(message)
+          }
+        })
+    },
     answerQuestion () {
       let self = this
 
