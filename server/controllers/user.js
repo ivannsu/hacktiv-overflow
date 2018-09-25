@@ -4,6 +4,21 @@ const crypt = require('../helpers/crypt')
 const axios = require('axios')
 
 module.exports = {
+  findAll (req, res) {
+    User.find({}).select('name')
+    .then(users => {
+      res.status(200).json({
+        message: 'get all users successfully',
+        users
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: err.message
+      })
+    })
+  },
+
   fbSignin (req, res) {
     let fbtoken = req.headers.fbtoken
 

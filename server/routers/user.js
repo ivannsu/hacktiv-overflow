@@ -1,6 +1,7 @@
 const router = require('express').Router()
-const { signin, signup, fbSignin } = require('../controllers/user')
+const { findAll, signin, signup, fbSignin } = require('../controllers/user')
 
+router.get('/', findAll)
 router.post('/signin', signin)
 router.post('/signup', signup)
 router.post('/fbSignin', fbSignin)
