@@ -1,8 +1,8 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <router-link class="navbar-brand" :to="{ name: 'all-question' }">
-      <img src="public/hacktiv8.png" width="30" height="30" class="d-inline-block align-top" alt="">
-      Hacktiv Overflow
+      <img src="https://storage.cloud.google.com/hacktiv-overflow.ivansu.website/img/hacktiv.png?_ga=2.242087691.-867503942.1536652938&_gac=1.8129414.1537867283.EAIaIQobChMIgaT0herV3QIVg4-PCh2G3gEUEAAYASAAEgI7yvD_BwE" width="30" height="30" class="d-inline-block align-middle img img img-thumbnail" alt="Brand Image">
+      <strong style="margin-left: 10px">Hacktiv Overflow</strong>
     </router-link>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
