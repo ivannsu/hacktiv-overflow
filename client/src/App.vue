@@ -7,6 +7,9 @@
         <router-view/>
       </div>
     </div>
+    <div class="footer">
+      <p>Copyright &copy; 2018 - Hacktiv Overflow</p>
+    </div>
   </div>
 </template>
 
@@ -24,8 +27,41 @@ export default {
 
 <style>
 
-.card {
+.list-group {
+  background-color: #f2f2f2;
+  height: 100%;
+}
+
+.list-group-item:first-child,
+.list-group-item:last-child {
+  border-radius: 0;
+}
+
+.list-group-item {
+  border: none;
+  border-left: 5px solid #17a2b8;
   margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+  box-shadow: 0 2px 3px 0 hsla(0, 0%, 0%, 0.2);
+  border-left-color: #007bff;
+}
+
+.footer {
+  margin-top: 40px;
+  background-color: #333333;
+  display: block;
+  padding: 15px 25px;
+  height: 70px;
+  line-height: 35px;
+  color: #cccccc;
+  text-align: center;
+}
+
+.card {
+  margin-bottom: 25px;
 }
 
 .lds-ring-container {
