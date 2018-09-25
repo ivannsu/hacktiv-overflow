@@ -1,5 +1,5 @@
 <template>
-  <div class="col-lg-8">
+  <div class="col-lg-9">
     <div class="row">
       <div class="col-lg-2" v-for="(user, key) in users.data" :key="key">
         <img class="card-img-top img-thumbnail rounded-circle text-center" :src="avatarImage(user.name)" alt="Card image cap" width="100%">
