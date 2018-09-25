@@ -125,10 +125,10 @@ module.exports = {
         select: '_id name email'
       }
     })
-    .then(questions => {
+    .then(question => {
       res.status(200).json({
         message: 'get question by id successfully',
-        questions
+        question
       })
     })
     .catch(err => {
