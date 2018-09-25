@@ -51,10 +51,30 @@ export default {
   },
   methods: {
     answerQuestion () {
-      // after website rendered in a form search type your keyword
+      let self = this
+
       axios({
-        method: ''
+        method: 'POST',
+        url: `${self.$baseurl}/answers/create/${self.id}`,
+        headers: {
+          token: self.$store.state.token
+        },
+        data: {
+          answer: self.answer
+        }
       })
+        .then(response => {
+          self.fetchDetailQuestion()
+          self.answer = ''
+        })
+        .catch(err => {
+          let message = err.response.data.message
+          if (!message) {
+            console.error(err)
+          } else {
+            console.error(message)
+          }
+        })
     },
     remove () {
       let self = this
@@ -91,27 +111,30 @@ export default {
             return false
           }
         })
+    },
+    fetchDetailQuestion () {
+      let self = this
+
+      axios({
+        method: 'GET',
+        url: `${self.$baseurl}/questions/detail/${self.id}`
+      })
+        .then(response => {
+          let question = response.data.question
+          self.question = question
+        })
+        .catch(err => {
+          let message = err.response.data.message
+          if (!message) {
+            console.error(err)
+          } else {
+            console.error(message)
+          }
+        })
     }
   },
   created () {
-    let self = this
-
-    axios({
-      method: 'GET',
-      url: `${self.$baseurl}/questions/detail/${self.id}`
-    })
-      .then(response => {
-        let question = response.data.question
-        self.question = question
-      })
-      .catch(err => {
-        let message = err.response.data.message
-        if (!message) {
-          console.error(err)
-        } else {
-          console.error(message)
-        }
-      })
+    this.fetchDetailQuestion()
   },
   computed: {
     token () {
