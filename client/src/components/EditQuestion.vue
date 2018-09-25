@@ -1,5 +1,5 @@
 <template>
-  <div class="col-lg-8">
+  <div class="col-lg-9">
     <h3>Edit Question</h3>
     <hr>
     <div>
