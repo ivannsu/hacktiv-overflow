@@ -105,15 +105,6 @@ export default {
         .catch(err => {
           self.message = err.response.data.message
         })
-    },
-    signout () {
-      localStorage.removeItem('token')
-      localStorage.removeItem('userId')
-
-      this.$store.dispatch('removeToken')
-      this.$store.dispatch('removeUserId')
-
-      this.authentication = false
     }
   },
   created () {
