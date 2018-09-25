@@ -1,12 +1,12 @@
 <template>
-  <div class="col-lg-8">
+  <div class="col-lg-9">
     <div class="lds-ring-container" v-if="!question">
       <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
     </div>
     <div v-else>
       <h2>
         {{ question.title }}
-        <router-link v-if="token" :to="{ name: 'create-question' }" class="float-right btn btn-success">Ask Question</router-link>
+        <router-link v-if="token" :to="{ name: 'create-question' }" class="float-right btn btn-outline-success">Ask Question</router-link>
       </h2>
       <p>
         Asked: <strong>{{ question.user.name }}</strong>
@@ -16,14 +16,14 @@
       <p>
         <h5 style="display: inline-block"><span class="badge badge-warning">{{ questionVotes }} Votes</span></h5>
         &nbsp;
-        <a class="btn btn-outline-primary" href="javascript:void(0)" @click="questionVote('up')"><span class="fa fa-thumbs-up"></span> UP VOTE</a>
+        <a class="btn btn-outline-primary" href="javascript:void(0)" @click="questionVote('up')"><span class="fa fa-thumbs-up"></span></a>
         &nbsp;
-        <a class="btn btn-outline-primary" href="javascript:void(0)" @click="questionVote('down')"><span class="fa fa-thumbs-down"></span> DOWN VOTE</a>
-      </p>
+        <a class="btn btn-outline-primary" href="javascript:void(0)" @click="questionVote('down')"><span class="fa fa-thumbs-down"></span></a>
+      <p/>
       <hr />
       <h4>{{ question.answers.length }} Answer</h4>
       <br>
-      <div class="card border-dark" v-for="(answer, key) in question.answers" :key="key">
+      <div class="card border-dark" v-for="(answer, key) in question.answers" :key="key" style="border-color: #ccc !important">
         <div class="card-header">
           <div>
             By: <strong>{{ answer.user.name }}</strong>
@@ -31,11 +31,11 @@
             <button v-if="token && userId === answer.user._id" class="float-right btn btn-outline-info" @click="openEditModal(answer)">Edit</button>
           </div>
           <div>
-            <h5 style="display: inline-block"><span class="badge badge-warning"> Votes</span></h5>
+            <h5 style="display: inline-block"><span class="badge badge-warning">{{ JSON.stringify(answer.total)}} Votes</span></h5>
             &nbsp;
-            <a class="btn btn-sm btn-outline-secondary" href="javascript:void(0)" @click="answerVote(answer._id, 'up')"><span class="fa fa-thumbs-up"></span> UP VOTE</a>
+            <a class="btn btn-sm btn-outline-secondary" href="javascript:void(0)" @click="answerVote(answer._id, 'up')"><span class="fa fa-thumbs-up"></span></a>
             &nbsp;
-            <a class="btn btn-sm btn-outline-secondary" href="javascript:void(0)" @click="answerVote(answer._id, 'down')"><span class="fa fa-thumbs-down"></span> DOWN VOTE</a>
+            <a class="btn btn-sm btn-outline-secondary" href="javascript:void(0)" @click="answerVote(answer._id, 'down')"><span class="fa fa-thumbs-down"></span></a>
           </div>
         </div>
         <div class="card-body">
@@ -88,28 +88,44 @@ export default {
   data () {
     return {
       question: null,
-
       questionVotes: 0,
-      answerVotes: 0,
-
       answer: '',
       editAnswerId: '',
       editAnswerText: ''
     }
   },
   methods: {
-    questionVote (type) {
+    fetchDetailQuestion () {
       let self = this
 
       axios({
-        method: 'POST',
-        url: `${self.$baseurl}/votes/question/${self.id}/${type}`,
-        headers: {
-          token: self.token
-        }
+        method: 'GET',
+        url: `${self.$baseurl}/questions/detail/${self.id}`
       })
-        .then(res5ba9ebd788c4db0365c4fda2ponse => {
-          self.countQuestionVotes()
+        .then(response => {
+          let question = response.data.question
+          for (let i = 0; i < question.answers.length; i++) {
+            let answer = question.answers[i]
+
+            self.countAnswerVotes(answer._id)
+              .then(response => {
+                question.answers[i].total = response.data.total
+                self.question = {
+                  ...question
+                }
+              })
+              .catch(err => {
+                let message = err.response.data.message
+                if (!message) {
+                  console.error(err)
+                } else {
+                  console.error(message)
+                }
+              })
+          }
+          console.log('masuk sini 2')
+          console.log(question)
+          self.question = question
         })
         .catch(err => {
           let message = err.response.data.message
@@ -120,6 +136,76 @@ export default {
           }
         })
     },
+
+    countQuestionVotes () {
+      let self = this
+
+      axios({
+        method: 'GET',
+        url: `${self.$baseurl}/votes/question/${self.id}/count`
+      })
+        .then(response => {
+          let total = response.data.total
+          self.questionVotes = total
+        })
+        .catch(err => {
+          let message = err.response.data.message
+          if (!message) {
+            console.error(err)
+          } else {
+            console.error(message)
+          }
+        })
+    },
+
+    countAnswerVotes (id) {
+      let self = this
+
+      return new Promise(function (resolve, reject) {
+        axios({
+          method: 'GET',
+          url: `${self.$baseurl}/votes/answer/${id}/count`
+        })
+          .then(response => {
+            resolve(response)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+
+    questionVote (type) {
+      let self = this
+
+      if (!this.token && !this.userId) {
+        this.$router.push({ name: 'signin' })
+      } else {
+        if (this.question.user._id === this.userId) {
+          alert('Tidak dapat memvote pertanyaan sendiri')
+        } else {
+          axios({
+            method: 'POST',
+            url: `${self.$baseurl}/votes/question/${self.id}/${type}`,
+            headers: {
+              token: self.token
+            }
+          })
+            .then(res5ba9ebd788c4db0365c4fda2ponse => {
+              self.countQuestionVotes()
+            })
+            .catch(err => {
+              let message = err.response.data.message
+              if (!message) {
+                console.error(err)
+              } else {
+                console.error(message)
+              }
+            })
+        }
+      }
+    },
+
     answerVote (id, type) {
       let self = this
 
@@ -131,7 +217,7 @@ export default {
         }
       })
         .then(response => {
-          console.log(response.data)
+          self.fetchDetailQuestion()
         })
         .catch(err => {
           let message = err.response.data.message
@@ -142,6 +228,7 @@ export default {
           }
         })
     },
+
     openEditModal (answer) {
       this.editAnswerId = answer._id
       this.editAnswerText = answer.answer
@@ -149,6 +236,7 @@ export default {
       // eslint-disable-next-line
       $('#editAnswerModal').modal('show')
     },
+
     editAnswer () {
       let self = this
 
@@ -179,6 +267,7 @@ export default {
           }
         })
     },
+
     answerQuestion () {
       let self = this
 
@@ -193,7 +282,6 @@ export default {
         }
       })
         .then(response => {
-          self.fetchDetailQuestion()
           self.answer = ''
         })
         .catch(err => {
@@ -205,6 +293,7 @@ export default {
           }
         })
     },
+
     remove () {
       let self = this
 
@@ -238,67 +327,6 @@ export default {
               })
           } else {
             return false
-          }
-        })
-    },
-    fetchDetailQuestion () {
-      let self = this
-
-      axios({
-        method: 'GET',
-        url: `${self.$baseurl}/questions/detail/${self.id}`
-      })
-        .then(response => {
-          let question = response.data.question
-          self.question = question
-        })
-        .catch(err => {
-          let message = err.response.data.message
-          if (!message) {
-            console.error(err)
-          } else {
-            console.error(message)
-          }
-        })
-    },
-    countQuestionVotes () {
-      let self = this
-
-      axios({
-        method: 'GET',
-        url: `${self.$baseurl}/votes/question/${self.id}/count`
-      })
-        .then(response => {
-          let total = response.data.total
-          self.questionVotes = total
-        })
-        .catch(err => {
-          let message = err.response.data.message
-          if (!message) {
-            console.error(err)
-          } else {
-            console.error(message)
-          }
-        })
-    },
-
-    countAnswerVotes (id) {
-      let self = this
-
-      axios({
-        method: 'GET',
-        url: `${self.$baseurl}/votes/answer/${id}/count`
-      })
-        .then(response => {
-          let total = response.data.total
-          self.answerVotes = total
-        })
-        .catch(err => {
-          let message = err.response.data.message
-          if (!message) {
-            console.error(err)
-          } else {
-            console.error(message)
           }
         })
     }
