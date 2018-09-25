@@ -14,7 +14,7 @@
         OR
       </div>
       <p class="text-center">
-        <span class="fa fa-chevron-down" style="font-size: 1.2em"></span>
+        <span class="fa fa-chevron-down" style="font-size: 1.7em"></span>
       </p>
     </div>
     <div class="lds-ring-container" v-if="questions.data.length === 0 && !questions.empty">
@@ -22,7 +22,7 @@
     </div>
     <div class="row" v-else>
       <div class="col-lg-6" v-for="(question, key) in questions.data" :key="key">
-        <div class="card">
+        <div class="card custom-card">
           <div class="card-body">
             <h4><router-link :to="{ name: 'detail-question', params: { id: question._id } }" class="text-dark"><strong>{{ question.title }}</strong></router-link></h4>
             <blockquote class="blockquote mb-0">
@@ -67,6 +67,10 @@ export default {
 .custom-brand-img {
   max-width: 150px;
   margin: 20px;
+}
+
+.custom-card {
+  box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2) !important;
 }
 
 </style>
