@@ -24,7 +24,7 @@ module.exports = {
 
           Question.updateOne({ _id: questionId }, { $push: { answers: newAnswer._id } })
           .then(affected => {
-            let link = `http://localhost:8080/question/${questionId}`
+            let link = `${process.env.CLIENT_URL}/question/${questionId}`
             sendMail(question.user.email, question.user.name, link)
 
             res.status(201).json({
