@@ -1,10 +1,13 @@
 <template>
   <div class="col-lg-9">
-    <div class="alert alert-danger" v-if="message !== ''">
-      {{ message }}
-    </div>
     <div class="form-group text-center">
       <h2>Sign In</h2>
+      <div class="alert alert-danger" v-if="message !== ''">
+        {{ message }}
+      </div>
+      <div class="alert alert-warning" v-if="notif">
+        Activation email has sended, Check your inbox or spam
+      </div>
       <hr>
       <fb-signin-button
         :params="fbSignInParams"
@@ -41,7 +44,8 @@ export default {
       email: '',
       password: '',
       message: '',
-      authentication: false
+      authentication: false,
+      notif: false
     }
   },
   methods: {
@@ -105,11 +109,21 @@ export default {
         .catch(err => {
           self.message = err.response.data.message
         })
+    },
+    getQuery () {
+      let urlParams = new URLSearchParams(window.location.search);
+      let myParam = urlParams.get('from');
+
+      if (myParam === 'signup') {
+        this.notif = true
+      }
     }
   },
   created () {
     let token = localStorage.getItem('token')
     let userId = localStorage.getItem('userId')
+
+    this.getQuery()
 
     if (!token && !userId) {
       this.authentication = false
