@@ -18,6 +18,10 @@ const userSchema = new Schema({
   loginType: {
     type: String,
     required: [true, 'Login Type is required']
+  },
+  active: {
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true
