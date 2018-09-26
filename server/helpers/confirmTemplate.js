@@ -262,16 +262,21 @@ module.exports = (to, link) => {
                     <table border="0" cellpadding="0" cellspacing="0">
                       <tr>
                         <td>
-                          <p>Hi <strong>${to}</strong>,</p>
-                          <p>Please confirm your email using the link below</p>
+                          <div style="display: block; text-align: center">
+                            <img 
+                              src="https://00e9e64bacd8632b1e00e83a53326b141be477f3ec47c1c42d-apidata.googleusercontent.com/download/storage/v1/b/hacktiv-overflow.ivansu.website/o/img%2Fhacktiv.png?qk=AD5uMEtMDvP1Suwr3aNzJmgUFQHPT9yD1Yxicp9_rQtqYCeE8KnUoH1WpDeorTfOBl3GAqsRfYPu_F1osynUWN6Ll2gxmTAPBXHf5QkabLz8oZktijpUmTH0GFqR6XJQ1HqAiF8F5B9xX_QELf48o4SQSIoTva2blV_G4n3CKAU5MMYDhKJlYnScYH_EkYTVerUGlpiquIXB4MzIx4DPZkb_K3ajyncNGcoqxupwXqXGWW_H85BDsTFVzVz1at5n28Zm5oPlAObNzsDfme1nuXx8r1At9jjkieru34imkkLZcAiAdUZe-8_6jqT0mZw4_BGFI86fhr41Ki-XKkTV9k6jDjiBldyDESeK59v0Sf-QYb_BnzaEbSufgUEkG8YwfODjQamEN6IJdSwjMtBjhVpStuiWe0pGfAasBObbXutwXFHe9dEJRysZ1W1PROc6JC8Dkza4C_zd9j-2-1j2poFOHadeCEhuLMjI6tTAwz4vMMhHqizoU8tWD7HA69rZ5vFMG9pBrwWCxwz9Q4ePtziw_IozO7ew8fHs85C2PkOMnLar0LU7_rHV3viMEr9h1yyFsYkiPEVEjhL-neFKGGQjdwttSHmAQwwni_uRG1DvqUQvbL7Pi6JdzZcpm4PCs3uxLJ0fmkJlQJnng-x6VB-dwaYVw7C5JvGwWPLSU8SL7DLctIxdzz6QEZwQ-sZHef0HU63nzqUYmbdQSZ80rxfI1IVfl07zMB292ntvFTYDzh9YS2fwbOK5gMXCuwLMjA9-wF8Kgtpp_jx_JcKxo7eVIzABo6agYCrhg5UmT0lxIdxLRP1mhoo"
+                              style="max-width: 150px"/>
+                          </div>
+                          <p style="text-align: center"">Hi <strong>${to}</strong>,</p>
+                          <p style="text-align: center"">Please confirm your email using the link below</p>
                           <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                             <tbody>
                               <tr>
-                                <td align="left">
+                                <td align="center">
                                   <table border="0" cellpadding="0" cellspacing="0">
                                     <tbody>
                                       <tr>
-                                        <td> <a href="${link}" target="_blank">Activat my account</a> </td>
+                                        <td> <a href="${link}" target="_blank">Activate my account</a> </td>
                                       </tr>
                                     </tbody>
                                   </table>
@@ -279,7 +284,7 @@ module.exports = (to, link) => {
                               </tr>
                             </tbody>
                           </table>
-                          <p>Thankyou for chooese our service</p>
+                          <p style="text-align: center">Thankyou for chooese our service</p>
                           <p></p>
                         </td>
                       </tr>
