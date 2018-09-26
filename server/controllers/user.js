@@ -198,7 +198,7 @@ module.exports = {
         .then(newUser => {
           let link = `${process.env.BASE_URL}/users/confirm/${newUser._id}`
 
-          confirmMail(newUser.email, newUser.email, link)
+          confirmMail(newUser.email, newUser.name, link)
 
           res.status(201).json({
             message: 'sign up successfully',
