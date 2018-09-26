@@ -5,7 +5,8 @@
     <div>
       <div class="form-group">
         <label for="">Your Question: </label>
-        <textarea cols="30" rows="10" class="form-control" placeholder="Write something..." v-model="question"></textarea>
+        <wysiwyg v-model="question" />
+        <!-- <textarea id="questionForm" cols="30" rows="10" class="form-control" placeholder="Write something..." v-model="question"></textarea> -->
       </div>
       <button type="submit" class="btn btn-primary" @click="askQuestion">Ask</button>
     </div>
@@ -53,6 +54,8 @@ export default {
     if (!this.token && !this.userId) {
       this.$router.push({ name: 'signin' })
     }
+  },
+  mounted () {
   },
   computed: {
     token () {
