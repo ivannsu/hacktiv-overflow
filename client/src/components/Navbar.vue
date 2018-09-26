@@ -202,7 +202,7 @@ export default {
 
           // eslint-disable-next-line
           $('#signupModal').modal('hide');
-          self.$router.push({ name: 'create-question' })
+          self.$router.replace({ path: '/signin?from=signup' })
         })
         .catch(err => {
           self.message = err.response.data.message
