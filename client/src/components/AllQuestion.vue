@@ -17,14 +17,17 @@
         <span class="fa fa-chevron-down" style="font-size: 2em; text-shadow: 0 4px 6px #333; color: #007bff"></span>
       </p>
     </div>
-    <div class="lds-ring-container" v-if="questions.data.length === 0 && !questions.empty">
+    <div v-if="questions.data.length === 0 && questions.empty">
+      <h2>No Questions</h2>
+    </div>
+    <div class="lds-ring-container" v-else-if="questions.data.length === 0 && !questions.empty">
       <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
     </div>
     <div class="row" v-else>
       <div class="col-lg-6" v-for="(question, key) in questions.data" :key="key">
         <div class="card custom-card">
           <div class="card-body">
-            <h4><router-link :to="{ name: 'detail-question', params: { id: question._id } }" class="text-dark"><strong>{{ question.title }}</strong></router-link></h4>
+            <h4><strong><router-link :to="{ name: 'detail-question', params: { id: question._id } }" class="text-dark" v-html="question.title"></router-link></strong></h4>
             <blockquote class="blockquote mb-0">
               <footer class="blockquote-footer">Asked by: <em>{{ question.user.name }}</em></footer>
             </blockquote>
