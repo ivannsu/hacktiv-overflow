@@ -6,6 +6,8 @@ const kue = require('kue')
 const queue = kue.createQueue()
 const template = require('./mailTemplate')
 
+kue.app.listen(3001)
+
 // let template = fs.readFileSync(__dirname + '/mailTemplate.html', 'utf-8').toString()
 
 function sendMail (to, name, link) {
@@ -27,7 +29,7 @@ function sendMail (to, name, link) {
     if (err) {
       console.error(err)
     } else {
-      queue.process('sendMail', function(job, done){
+      queue.process('sendMail', function(job, done) {
         transporter.sendMail(mailOptions, function (err, info) {
           if (err) {
             console.error(err)
@@ -35,7 +37,7 @@ function sendMail (to, name, link) {
             console.log(info)
           }
         })
-      });
+      })
     }
   })
 }
