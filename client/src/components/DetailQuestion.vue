@@ -5,7 +5,7 @@
     </div>
     <div v-else>
       <h2>
-        {{ question.title }}
+        <span v-html="question.title"></span>
         <router-link v-if="token" :to="{ name: 'create-question' }" class="float-right btn btn-outline-success">Ask Question</router-link>
       </h2>
       <p>
@@ -123,8 +123,6 @@ export default {
                 }
               })
           }
-          console.log('masuk sini 2')
-          console.log(question)
           self.question = question
         })
         .catch(err => {
