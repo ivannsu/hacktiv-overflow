@@ -1,5 +1,7 @@
 const Answer = require('../models/Answer')
 const Question = require('../models/Question')
+const User = require('../models/User')
+const sendMail = require('../helpers/sendMail')
 
 module.exports = {
   create (req, res) {
@@ -10,7 +12,7 @@ module.exports = {
       user: userId
     }
 
-    Question.findOne({ _id: questionId })
+    Question.findOne({ _id: questionId }).populate('user')
     .then(question => {
       if (!question) {
         res.status(500).json({
@@ -22,6 +24,9 @@ module.exports = {
 
           Question.updateOne({ _id: questionId }, { $push: { answers: newAnswer._id } })
           .then(affected => {
+            let link = `http://localhost:8080/question/${questionId}`
+            sendMail(question.user.email, question.user.name, link)
+
             res.status(201).json({
               message: 'create new answer successfully',
               answer: newAnswer
